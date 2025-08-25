@@ -1,0 +1,38 @@
+{
+  "name": "photo-booking-app-v6_2",
+  "version": "6.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "postinstall": "prisma generate",
+    "seed": "node prisma/seed.mjs"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "1.6.0",
+    "@aws-sdk/client-s3": "3.637.0",
+    "@aws-sdk/s3-request-presigner": "3.637.0",
+    "@aws-sdk/cloudfront-signer": "3.637.0",
+    "@prisma/client": "5.16.1",
+    "archiver": "7.0.1",
+    "autoprefixer": "10.4.20",
+    "bcryptjs": "2.4.3",
+    "date-fns": "3.6.0",
+    "isomorphic-fetch": "3.0.0",
+    "next": "14.2.5",
+    "next-auth": "5.0.0",
+    "nodemailer": "6.9.14",
+    "pdfkit": "0.13.0",
+    "postcss": "8.4.41",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "sharp": "0.33.4",
+    "stripe": "14.25.0",
+    "tailwindcss": "3.4.10"
+  },
+  "devDependencies": {
+    "prisma": "5.16.1",
+    "typescript": "5.5.4"
+  }
+}

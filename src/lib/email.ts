@@ -1,0 +1,3 @@
+import nodemailer from 'nodemailer';
+export function mailer(){ const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env as any; if(!SMTP_HOST||!SMTP_USER||!SMTP_PASS){ return { sendMail: async (o:any)=>console.log('MAIL(dev):',o.subject,'->',o.to) } as any; } return nodemailer.createTransport({ host: SMTP_HOST, port: Number(SMTP_PORT||587), secure: Number(SMTP_PORT||587)===465, auth:{ user: SMTP_USER, pass: SMTP_PASS } }); }
+export async function sendPIN(to:string, subject:string, code:string){ await mailer().sendMail({ from: process.env.SMTP_FROM||'no-reply@example.com', to, subject, text:`Votre code d'accès: ${code}` }); }

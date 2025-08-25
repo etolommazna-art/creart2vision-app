@@ -1,0 +1,1 @@
+import { prisma } from '@/lib/prisma'; import { NextRequest, NextResponse } from 'next/server'; export async function GET(req: NextRequest){ const cid=new URL(req.url).searchParams.get('categoryId'); const items=await prisma.service.findMany({ where:{ categoryId: cid||undefined }, orderBy:{ name:'asc' } }); return NextResponse.json(items); }
