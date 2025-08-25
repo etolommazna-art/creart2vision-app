@@ -123,7 +123,7 @@ model Asset {
 model AssetView {
   id          String     @id @default(cuid())
   assetId     String
-  galleryId   String      // backref vers Gallery (corrige l'erreur de relation)
+  galleryId   String
   viewedAt    DateTime   @default(now())
   viewerType  ViewerType
   viewerEmail String?
@@ -133,4 +133,18 @@ model AssetView {
 
   @@index([assetId])
   @@index([galleryId])
+}
+
+// --------------------------------------
+// Facturation minimale (pour stats mensuelles)
+// --------------------------------------
+model Invoice {
+  id              String   @id @default(cuid())
+  amountCents     Int
+  currency        String   @default("EUR")
+  status          String   @default("PAID") // ex: PAID | SUCCEEDED | REFUNDED | CANCELED
+  stripeSessionId String?
+  createdAt       DateTime @default(now())
+
+  @@index([createdAt])
 }
