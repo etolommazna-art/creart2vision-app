@@ -67,7 +67,7 @@ model VerificationToken {
 }
 
 // --------------------------------------
-// Galerie minimale (compatible avec ton app)
+// Galerie / Assets / Vues
 // --------------------------------------
 enum GalleryType {
   MARRIAGE
@@ -76,24 +76,31 @@ enum GalleryType {
   OTHER
 }
 
+enum ViewerType {
+  CLIENT
+  GUEST
+}
+
 model Gallery {
   id                String      @id @default(cuid())
   title             String
   type              GalleryType @default(OTHER)
 
+  // Accès
   token             String      @unique
   guestToken        String      @unique
-
   clientRequireCode Boolean     @default(false)
   clientAccessCode  String?
   guestRequireCode  Boolean     @default(false)
   guestAccessCode   String?
 
+  // Client
   clientName        String
   clientEmail       String?
 
   createdAt         DateTime    @default(now())
 
+  // Relations
   assets            Asset[]
   views             AssetView[]
 }
@@ -101,7 +108,7 @@ model Gallery {
 model Asset {
   id         String   @id @default(cuid())
   galleryId  String
-  key        String   // clé/chemin S3
+  key        String   // clé/chemin S3 ex: originals/{galleryId}/{assetId}.jpg
   filename   String
   mime       String?
   size       Int?
@@ -109,19 +116,21 @@ model Asset {
 
   gallery    Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
   views      AssetView[]
-}
 
-enum ViewerType {
-  CLIENT
-  GUEST
+  @@index([galleryId])
 }
 
 model AssetView {
   id          String     @id @default(cuid())
   assetId     String
+  galleryId   String      // backref vers Gallery (corrige l'erreur de relation)
   viewedAt    DateTime   @default(now())
   viewerType  ViewerType
   viewerEmail String?
 
   asset       Asset      @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  gallery     Gallery    @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+  @@index([galleryId])
 }
