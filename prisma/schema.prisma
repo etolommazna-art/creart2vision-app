@@ -106,18 +106,22 @@ model Gallery {
 }
 
 model Asset {
-  id         String   @id @default(cuid())
-  galleryId  String
-  key        String   // clé/chemin S3 ex: originals/{galleryId}/{assetId}.jpg
-  filename   String
-  mime       String?
-  size       Int?
-  createdAt  DateTime @default(now())
+  id               String   @id @default(cuid())
+  galleryId        String
+  key              String   // clé/chemin S3 HD ex: originals/{galleryId}/{assetId}.jpg
+  keySd            String?  // clé/chemin S3 SD
+  filename         String
+  mime             String?
+  size             Int?
+  hiddenFromGuests Boolean   @default(false)
+  sortOrder        Int       @default(0)
+  createdAt        DateTime  @default(now())
 
-  gallery    Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
-  views      AssetView[]
+  gallery          Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  views            AssetView[]
 
   @@index([galleryId])
+  @@index([sortOrder])
 }
 
 model AssetView {
@@ -156,9 +160,6 @@ model Service {
   id          String         @id @default(cuid())
   name        String
   description String?
-  // cat optionnelle si tu veux plus tard :
-  // categoryId String?
-  // category   ServiceCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   plans       ServicePlan[]
   bookings    Booking[]
@@ -172,8 +173,8 @@ model ServicePlan {
   serviceId       String
   name            String
   description     String?
-  durationMinutes Int      // durée du créneau (ex: 60, 90…)
-  priceCents      Int      // prix TTC en centimes
+  durationMinutes Int
+  priceCents      Int
 
   service         Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   bookings        Booking[]
