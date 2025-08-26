@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -23,7 +22,7 @@ const authConfig: NextAuthConfig = {
         const adminEmail = (process.env.ADMIN_EMAIL ?? "").toLowerCase().trim();
         const adminPassword = process.env.ADMIN_PASSWORD ?? "";
 
-        // ⚠️ credentials.* est unknown → on cast en string proprement
+        // credentials.* est unknown → on cast en string
         const email = String(credentials?.email ?? "").toLowerCase().trim();
         const password = String(credentials?.password ?? "");
 
@@ -47,7 +46,7 @@ const authConfig: NextAuthConfig = {
   },
 };
 
-const authHandlers = NextAuth(authConfig);
+// Pattern recommandé v5 : extraire handlers puis exporter GET/POST
+export const { handlers: { GET, POST } } = NextAuth(authConfig);
 
-export const GET: (req: NextRequest) => Promise<Response> = authHandlers.GET;
-export const POST: (req: NextRequest) => Promise<Response> = authHandlers.POST;
+// Ne RIEN exporter d'autre (pas de `config`, etc.)
